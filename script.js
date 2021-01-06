@@ -1,4 +1,70 @@
-let gameBoard = (() => {
+const board = document.getElementById('gameBoard');
+const cells = [...board.children];
+
+const player = (() => {
+  let rows = [];
+  let columns = [];
+  let diagonals = [];
+
+
+  return function(number, color) {
+    const playerNumber = number;
+    let playerColor = color;
+    return {playerNumber, playerColor};
+  }
+})()
+
+const player1 = (name) => {
+  const {playerNumber, playerColor} = player(1, 'blue');
+  
+  return {playerNumber, playerColor};
+}
+
+const player2 = (name) => {
+  const {playerNumber, playerColor} = player(2, 'red');
+  
+  return {playerNumber, playerColor};
+}
+
+let gameBoard = (prop, player) => {
+  prop.background = player.playerColor;
+}
+
+let obj;
+
+let gameControl = (() => {
+  let currentPlayer = player1();
+
+  return function(item) {
+    gameBoard(item.style, currentPlayer)
+    currentPlayer = (currentPlayer.playerNumber == 1) ? player2() : player1();
+
+
+
+    /* for (let i = 0; i < item.classList.length; i++) {
+      let className = item.classList[i];
+      if(className.includes('row')) {
+        let rows1 = board.querySelectorAll(`.${className}`);
+        rows.push(rows1);
+      } else if(className.includes('column')) {
+        let columns1 = board.querySelectorAll(`.${className}`);
+        columns.push(columns1);
+      } else {
+        let diagonals1 = board.querySelectorAll(`.${className}`);
+        diagonals.push(diagonals1);
+      }
+    }
+
+    obj = {rows, columns, diagonals} */
+  }
+})()
+
+cells.forEach(item => {
+  item.addEventListener('mousedown', () => gameControl(item))
+})
+
+
+/* let gameBoard = (() => {
   const board = document.getElementById('gameBoard');
   let cells = [...board.children];
 
@@ -32,26 +98,7 @@ let gameBoard = (() => {
   }
 })();
 
-
-const player = (name) => {
-  const hello = () => console.log('This is player object.');
-  const sayName = () => console.log(`My name\'s ${name}`);
-  
-  return {hello, sayName};
-}
-
-const player1 = (name) => {
-  const turn = () => {
-    console.log('Player 1 turned!');
-  }
-
-  const {hello, sayName} = player(name);
-  
-  return {turn, hello, sayName};
-}
-
 let artem = player1('Artem');
-
 
 
 function changeBackground() {
@@ -59,4 +106,5 @@ function changeBackground() {
   array.forEach(item => {
     item.style.background = "red";
   })
-}
+} */
+
