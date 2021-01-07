@@ -8,15 +8,13 @@ const container = document.getElementById('container');
 const board = document.getElementById('gameBoard');
 const cells = [...board.children];
 
+const player = (name, color, number, fields) => {
+  return {name, color, number, fields}
+}
 
-/* buttons.forEach(item => {
-  item.addEventListener('mousedown', (e) => {
-    const parentNode = item.parentNode.parentNode;
-    const selectedPlayer = parentNode.classList[0];
-    console.log(selectedPlayer);
-  })
-}) */
+let player1 = player('player 1', 'blue', 1, {});
 
+let player2 = player('player 2', 'red', 2, {});
 
 
 startButton.addEventListener('mousedown', () => {
@@ -28,41 +26,19 @@ startButton.addEventListener('mousedown', () => {
     const player = parentNode.classList[0];
     console.log(names[i].value);
     if(player == 'player1' && names[i].value != '') {
-      player1(names[i].value);
+      player1.name = names[i].value;
     } else if(player == 'player2' && names[i].value != '') {
-      player2(names[i].value);
+      player2.name = names[i].value;
     }
   }
 })
-
-let player1 = (() => {
-  let defaultName = 'player 1';
-  let color = 'blue';
-  let fields = {};
-  const number = 1;
-
-  return function (name = defaultName) {
-    return {fields, name, color, number}
-  }
-})()
-
-let player2 = (() => {
-  let defaultName = 'player 2';
-  let color = 'red';
-  let fields = {};
-  const number = 2;
-
-  return function (name = defaultName) {
-    return {fields, name, color, number}
-  }
-})()
 
 let gameBoard = (prop, player) => {
   prop.background = player.color;
 }
 
 let gameControl = (() => {
-  let player = player1();
+  let player = player1;
   let selectedCells = [];
 
   return function(item) {
@@ -84,7 +60,7 @@ let gameControl = (() => {
         }
       }
 
-      player = (player.number == 1) ? player2() : player1();
+      player = (player.number == 1) ? player2 : player1;
 
     }
   }
