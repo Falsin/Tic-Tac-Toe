@@ -2,6 +2,7 @@ body {
   width: 100vw;
   height: 100vh;
   font-size: 3vmin;
+  position: relative;
 }
 * {
   padding: 0;
@@ -65,7 +66,7 @@ body {
 #container {
   width: 100%;
   height: 100%;
-  display: none;
+  display: grid;
   grid-template-columns: auto 50vmin auto;
   grid-template-rows: auto 50vmin auto;
 }
@@ -86,6 +87,7 @@ body {
   grid-column-end: 2;
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 #gameBoard {
   background: black;
@@ -124,4 +126,18 @@ footer {
   grid-column-end: 4;
   width: 100%;
   height: 100%;
+}
+#restart {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: hsla(120, 100%, 25%, 0.473);
+  z-index: 10;
+}
+#greetingBlock.off,
+#container.off,
+#restart.off {
+  display: none;
 }

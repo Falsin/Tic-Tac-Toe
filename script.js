@@ -8,6 +8,11 @@ const container = document.getElementById('container');
 const board = document.getElementById('gameBoard');
 const cells = [...board.children];
 
+const body = document.querySelector('body');
+const mainBlocks = [...body.children].slice(0, 3);
+
+console.log(mainBlocks)
+
 const player = (name, color, number, fields) => {
   return {name, color, number, fields}
 }
@@ -18,13 +23,13 @@ let player2 = player('player 2', 'red', 2, {});
 
 
 startButton.addEventListener('mousedown', () => {
-  greetingBlock.style.display = 'none';
-  container.style.display = 'grid';
-
+  mainBlocks.forEach(item => item.classList.add('off'))
+  container.classList.remove('off');
+  
   for (let i = 0; i < names.length; i++) {
     const parentNode = names[i].parentNode.parentNode;
     const player = parentNode.classList[0];
-    console.log(names[i].value);
+
     if(player == 'player1' && names[i].value != '') {
       player1.name = names[i].value;
     } else if(player == 'player2' && names[i].value != '') {
@@ -56,7 +61,7 @@ let gameControl = (() => {
         player.fields[className]++;
 
         if(player.fields[className] == 3) {
-          alert(`${player.name} win!`);
+          mainBlocks[mainBlocks.length - 1].classList.remove('off');
         }
       }
 
