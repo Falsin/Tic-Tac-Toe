@@ -158,12 +158,59 @@ footer {
   margin: auto;
 }
 
-#restart, #restart * {
-  border: solid red;
-}
-
 #greetingBlock.off,
 #container.off,
 #restart.off {
   display: none;
+}
+
+#restartBlock {
+  .size(70vmin, 50vmin);
+}
+
+#restartBlock #winnerPlayer {
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#restartBlock #arrow {
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#arrow img {
+  .size(40%, auto);
+  cursor: pointer;
+}
+
+/* .player, .player * {
+  border: solid 1px red;
+} */
+
+.iconPlayer {
+  .size(15vmin, 15vmin);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.iconPlayer img {
+  border-radius: 50%;
+  .size(80%, 80%)
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.namePlayer {
+  margin-top: 4vmin;
+  margin-bottom: 2vmin;
+  color: white;
 }

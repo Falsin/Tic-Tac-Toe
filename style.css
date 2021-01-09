@@ -140,12 +140,54 @@ footer {
 #restartBlock {
   margin: auto;
 }
-#restart,
-#restart * {
-  border: solid red;
-}
 #greetingBlock.off,
 #container.off,
 #restart.off {
   display: none;
+}
+#restartBlock {
+  width: 70vmin;
+  height: 50vmin;
+}
+#restartBlock #winnerPlayer {
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#restartBlock #arrow {
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#arrow img {
+  width: 40%;
+  height: auto;
+  cursor: pointer;
+}
+/* .player, .player * {
+  border: solid 1px red;
+} */
+.iconPlayer {
+  width: 15vmin;
+  height: 15vmin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.iconPlayer img {
+  border-radius: 50%;
+  width: 80%;
+  height: 80%;
+}
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.namePlayer {
+  margin-top: 4vmin;
+  margin-bottom: 2vmin;
+  color: white;
 }

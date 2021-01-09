@@ -7,6 +7,8 @@ const names = document.querySelectorAll('input');
 const container = document.getElementById('container');
 const board = document.getElementById('gameBoard');
 const cells = [...board.children];
+const players = container.querySelectorAll('.namePlayer');
+const images = container.querySelectorAll('img');
 
 const restart = document.getElementById('restart');
 const title = restart.querySelector('h2');
@@ -15,7 +17,7 @@ const img = restart.querySelector('img');
 const body = document.querySelector('body');
 const mainBlocks = [...body.children].slice(0, 3);
 
-console.log(mainBlocks)
+
 
 const player = (name, color, number, fields) => {
   return {name, color, number, fields}
@@ -25,10 +27,31 @@ let player1 = player('player 1', 'blue', 1, {});
 
 let player2 = player('player 2', 'red', 2, {});
 
+buttons.forEach(item => {
+  item.addEventListener('mousedown', () => {
+    const player = item.parentNode.parentNode.classList[0];
+    const mode = item.textContent;
+    const srcImg = (mode == 'Human') ? '/images/personIcon.png':
+                                       '/images/robot.jpeg';
+
+    if(player == 'player1') {
+      player1.mode = mode;
+      player1.src = srcImg;
+    } else {
+      player2.mode = mode;
+      player2.src = srcImg;
+    }
+
+    if (mode = 'AI') {
+      
+    }
+  })
+});
+
 startButton.addEventListener('mousedown', () => {
   mainBlocks.forEach(item => item.classList.add('off'))
   container.classList.remove('off');
-  
+
   for (let i = 0; i < names.length; i++) {
     const parentNode = names[i].parentNode.parentNode;
     const player = parentNode.classList[0];
@@ -39,6 +62,12 @@ startButton.addEventListener('mousedown', () => {
       player2.name = names[i].value;
     }
   }
+
+  players[0].textContent = player1.name;
+  players[1].textContent = player2.name;
+
+  images[0].src = player1.src;
+  images[1].src = player2.src;
 })
 
 let gameBoard = (prop, player) => {
