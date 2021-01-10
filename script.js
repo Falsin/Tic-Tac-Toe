@@ -130,8 +130,10 @@ let gameControl = (() => {
 
 function robotChoice(id, player, selectedCells = []) {
   if(selectedCells.length == 0) {
-    return id;
-  } else if (!(selectedCells.length == cells.length - 1)) {
+    let maxItem = 0;
+    let minItem = cells.length - 1;
+    return Math.round(Math.random() * (maxItem - minItem + 1) + minItem - 0.5);
+} else if (!(selectedCells.length == cells.length - 1)) {
     let enemyFields;
     let robotFields = JSON.parse(JSON.stringify(player.fields));;
     if(player.number == 2) {
