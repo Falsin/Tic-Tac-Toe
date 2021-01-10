@@ -131,54 +131,108 @@ let gameControl = (() => {
 function robotChoice(id, player, selectedCells = []) {
   if(selectedCells.length == 0) {
     return id;
-  } else {
+  } else if (!(selectedCells.length == cells.length - 1)) {
     let enemyFields;
-    let robotFields = player.fields;
+    let robotFields = JSON.parse(JSON.stringify(player.fields));;
     if(player.number == 2) {
-      enemyFields = player1.fields;
+      enemyFields = JSON.parse(JSON.stringify(player1.fields));
     } else {
-      enemyFields = player2.fields;
+      enemyFields = JSON.parse(JSON.stringify(player2.fields));
     }
 
-    let count = 0;
+    let currentClass = '';
+    let playerObj = JSON.parse(JSON.stringify(player));
+
+    for (const key in playerObj.fields) {
+      if (playerObj.fields[key] == 2) {
+        let value = enemyFields[key];
+        if(value) {
+          delete playerObj.fields[key];
+        }
+        currentClass += (playerObj.fields[key] === undefined) ? '' : '.' + key;
+      }
+    }
+
+    if (currentClass) {
+      let currentElem = board.querySelectorAll(currentClass);
+      currentElem = [...currentElem];
+      for (let i = 0; i < currentElem.length; i++) {
+        if (!selectedCells.includes(currentElem[i])) {
+          return currentElem[i].dataset.id;
+        }
+        
+      }
+
+    } 
+
+    for (const key in enemyFields) {
+      let playerObj = JSON.parse(JSON.stringify(player));
+      if(enemyFields[key] == 2 && !playerObj.fields[key]) {
+        let currentLine = board.querySelectorAll(`.${key}`);
+        currentLine = [...currentLine];
+        for (let i = 0; i < currentLine.length; i++) {
+          let classArray = currentLine[i].classList;
+          for (let j = 0; j < classArray.length; j++) {
+            if(!enemyFields[classArray[j]]) {
+              console.log(currentLine[i]);
+              return currentLine[i].dataset.id;
+            }
+          }
+        }
+      }
+    }
+
+    let countKeys = 0;
     let id;
 
-    let playerObj = Object.assign(player);
-
     for (let i = 0; i < cells.length; i++) {
+      let playerObj = JSON.parse(JSON.stringify(player));
+      let countWinWay = 0;
+
       if(!selectedCells.includes(cells[i])) {
-        for (const key in player) {
+        
+        let arrayClasses = cells[i].classList;
+        for (let j = 0; j < arrayClasses.length; j++) {
+          if(!playerObj.fields[arrayClasses[j]]) {
+            playerObj.fields[arrayClasses[j]] = 0;
+          }
+          playerObj.fields[arrayClasses[j]]++;
+        }
+
+        for (const key in playerObj.fields) {
+          let value = enemyFields[key];
+          if(value) {
+            delete playerObj.fields[[key]];
+          }
+        }
+
+        let count = 0;
+
+        for (const key in playerObj.fields) {
           count++;
+          let test = playerObj.fields[key];
+          if (playerObj.fields[key] == 2) {
+            countWinWay++;
+          }
         }
 
-
-      let maxValue = 0;
-      let maxCount = count + cells[i].classList.length;
-
-      for (let j = 0; i < cells[i].classList.length; j++) {
-        let className = cells[i].classList.classList[j];
-
-        if(!player.fields[className]) {
-          player.fields[className] = 0;
-        }
-        player.fields[className]++;
-      }
-      
-
-        if(maxCount > count) {
-          count = maxCount;
+        if (count > countKeys || countWinWay == 2) {
+          countKeys = count;
           id = i;
         }
       }
-    }
 
+    }
     return id;
+  } else {
+    for (let i = 0; i < cells.length; i++) {
+      if (!selectedCells.includes(cells[i])) {
+        return cells[i].dataset.id;
+      }
+      
+    }
   }
 
-
-  /* let maxItem = cells.length - 1
-  let minItem = 0;
-  return Math.round(Math.random() * (maxItem - minItem + 1) + minItem - 0.5); */
 }
 
 cells.forEach(item => {
