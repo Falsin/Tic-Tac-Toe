@@ -73,17 +73,13 @@ startButton.addEventListener('mousedown', () => {
     images[0].src = player1.src;
     images[1].src = player2.src;
 
-
-
-
     if(player1.mode == 'AI') {
-      const choice = robotChoice(0, cells.length - 1)
+      const choice = robotChoice(4)
       gameControl(cells[choice]);
     }
   } else {
     alert('You must choose the player mode!')
   }
-
 })
 
 let gameBoard = (prop, player) => {
@@ -121,16 +117,68 @@ let gameControl = (() => {
       if(player.mode == 'AI') {
         let choice;
         do {
-          choice = robotChoice(0, cells.length - 1);
+          choice = robotChoice(0, player, selectedCells);
         } while (selectedCells.includes(cells[choice]))
         gameControl(cells[choice]);
       }
     }
+    
+
+    return {player, selectedCells};
   }
 })()
 
-function robotChoice(minItem, maxItem) {
-  return Math.round(Math.random() * (maxItem - minItem + 1) + minItem - 0.5);
+function robotChoice(id, player, selectedCells = []) {
+  if(selectedCells.length == 0) {
+    return id;
+  } else {
+    let enemyFields;
+    let robotFields = player.fields;
+    if(player.number == 2) {
+      enemyFields = player1.fields;
+    } else {
+      enemyFields = player2.fields;
+    }
+
+    let count = 0;
+    let id;
+
+    let playerObj = Object.assign(player);
+
+    for (let i = 0; i < cells.length; i++) {
+      if(!selectedCells.includes(cells[i])) {
+        for (const key in player) {
+          count++;
+        }
+
+
+      let maxValue = 0;
+      let maxCount = count + cells[i].classList.length;
+
+      for (let j = 0; i < cells[i].classList.length; j++) {
+        let className = cells[i].classList.classList[j];
+
+        if(!player.fields[className]) {
+          player.fields[className] = 0;
+        }
+        player.fields[className]++;
+      }
+      
+
+        if(maxCount > count) {
+          count = maxCount;
+          id = i;
+        }
+      }
+    }
+
+    return id;
+  }
+
+
+  /* let maxItem = cells.length - 1
+  let minItem = 0;
+  return Math.round(Math.random() * (maxItem - minItem + 1) + minItem - 0.5); */
 }
 
 cells.forEach(item => {
@@ -150,8 +198,13 @@ img.addEventListener('mousedown', () => {
   player1.fields = {};
   player2.fields = {};
 
-/*   if(player1.mode ) {
+  let values = gameControl();
 
-  } */
-  gameControl();
+  if(values.player.mode == 'AI') {
+    let choice;
+    do {
+      choice = robotChoice(0, cells.length - 1);
+    } while (values.selectedCells.includes(cells[choice]))
+    gameControl(cells[choice]);
+  }
 })
