@@ -128,48 +128,6 @@ let gameControl = (() => {
   }
 })()
 
-/* let gameControl = (() => {
-  let player = player1;
-  let selectedCells = [];
-
-  return function(item) {
-    if(item === undefined) {
-      selectedCells = [];
-      player = player1;
-    } else if(!selectedCells.includes(item)) {
-      gameBoard(item.style, player)
-      selectedCells.push(item);
-
-      for (let i = 0; i < item.classList.length; i++) {
-        let className = item.classList[i];
-
-        if(!player.fields[className]) {
-          player.fields[className] = 0;
-        }
-        player.fields[className]++;
-
-        if(player.fields[className] == 3) {
-          restart.classList.remove('off');
-          title.textContent = `${player.name} won!`
-        }
-      }
-
-      player = (player.number == 1) ? player2 : player1;
-      
-      if(player.mode == 'AI') {
-        let choice;
-        do {
-          choice = robotChoice(0, player, selectedCells);
-        } while (selectedCells.includes(cells[choice]))
-        gameControl(cells[choice]);
-      }
-    }
-    
-
-    return {player, selectedCells};
-  }
-})() */
-
 function robotChoice(player, selectedCells = []) {
  if (!selectedCells.length) {
 /*     let maxItem = 0;
@@ -186,143 +144,70 @@ function robotChoice(player, selectedCells = []) {
     let robotChoice = JSON.parse(JSON.stringify(player.fields));
 
 
+    deleteObjectProp(robotChoice, enemyFields);
+    let checkForWin = checkForTwoElem(robotChoice.fields, selectedCells);
+    if (checkForWin) {
+      return checkForDefeat;
+    }
+
+    let checkForDefeat = checkForTwoElem(enemyFields, selectedCells);
+    if(checkForDefeat) {
+      return checkForDefeat;
+    }
+
     let winChoice = 0;
-    let id = 0
-    for (let i = 0; i < cells.length; i++) {
-      let test = 0;
-      if (!selectedCells.includes(cells[i])) {
-        let classList = [...cells[i].classList];
-
-        for (let j = 0; j < classList.length; j++) {
-          if(!robotChoice[classList[j]]) {
-            robotChoice[classList[j]] = 0;
-          }
-          robotChoice[classList[j]]++;
-        }
-
-        for (const key in robotChoice) {
-          test++;
-        }
-      }
-
-      if (test > winChoice) {
-        winChoice = test;
-        id = i;
-      }
-
+    let id;
+    cells.forEach((item, index) => {
       robotChoice = JSON.parse(JSON.stringify(player.fields));
-    }
-    return id;
-  }
-}
+      deleteObjectProp(robotChoice, enemyFields);
 
-/* function robotChoice(id, player, selectedCells = []) {
-  if(!selectedCells.length) {
-    let maxItem = 0;
-    let minItem = cells.length - 1;
-    return Math.round(Math.random() * (maxItem - minItem + 1) + minItem - 0.5);
-  } else if (!(selectedCells.length == cells.length - 2)) {
-    let enemyFields;
-    let robotFields = JSON.parse(JSON.stringify(player.fields));
-    if(player.number == 2) {
-      enemyFields = JSON.parse(JSON.stringify(player1.fields));
-    } else {
-      enemyFields = JSON.parse(JSON.stringify(player2.fields));
-    }
-
-    let currentClass = '';
-    let playerObj = JSON.parse(JSON.stringify(player));
-
-    for (const key in playerObj.fields) {
-      if (playerObj.fields[key] == 2) {
-        let value = enemyFields[key];
-        if(value) {
-          delete playerObj.fields[key];
-        }
-        currentClass += (playerObj.fields[key] === undefined) ? '' : '.' + key;
-      }
-    }
-
-    if (currentClass) {
-      let currentElem = board.querySelectorAll(currentClass);
-      currentElem = [...currentElem];
-      for (let i = 0; i < currentElem.length; i++) {
-        if (!selectedCells.includes(currentElem[i])) {
-          return currentElem[i].dataset.id;
-        }
-        
-      }
-
-    } 
-
-    for (const key in enemyFields) {
-      let playerObj = JSON.parse(JSON.stringify(player));
-      if(enemyFields[key] == 2 && !playerObj.fields[key]) {
-        let currentLine = board.querySelectorAll(`.${key}`);
-        currentLine = [...currentLine];
-        for (let i = 0; i < currentLine.length; i++) {
-          let classArray = currentLine[i].classList;
-          for (let j = 0; j < classArray.length; j++) {
-            if(!enemyFields[classArray[j]]) {
-              console.log(currentLine[i]);
-              return currentLine[i].dataset.id;
+      let validValue = 0;
+      if (!selectedCells.includes(item)) {
+        let classList = [...item.classList];
+        for (let i = 0; i < classList.length; i++) {
+          if (!enemyFields[classList[i]]) {
+            for (let j = 0; j < classList.length; j++) {
+              if(!robotChoice[classList[j]]) {
+                robotChoice[classList[j]] = 0;
+              }
+              robotChoice[classList[j]]++;
+            }
+            for (const key in robotChoice) {
+              validValue++;
             }
           }
         }
       }
-    }
-
-    let countKeys = 0;
-    let id;
-
-    for (let i = 0; i < cells.length; i++) {
-      let playerObj = JSON.parse(JSON.stringify(player));
-      let countWinWay = 0;
-
-      if(!selectedCells.includes(cells[i])) {
-        
-        let arrayClasses = cells[i].classList;
-        for (let j = 0; j < arrayClasses.length; j++) {
-          if(!playerObj.fields[arrayClasses[j]]) {
-            playerObj.fields[arrayClasses[j]] = 0;
-          }
-          playerObj.fields[arrayClasses[j]]++;
-        }
-
-        for (const key in playerObj.fields) {
-          let value = enemyFields[key];
-          if(value) {
-            delete playerObj.fields[[key]];
-          }
-        }
-
-        let count = 0;
-
-        for (const key in playerObj.fields) {
-          count++;
-          let test = playerObj.fields[key];
-          if (playerObj.fields[key] == 2) {
-            countWinWay++;
-          }
-        }
-
-        if (count > countKeys || countWinWay == 2) {
-          countKeys = count;
-          id = i;
-        }
+      if (validValue > winChoice) {
+        winChoice = validValue;
+        id = index;
       }
-
-    }
+    })
     return id;
-  } else {
-    for (let i = 0; i < cells.length; i++) {
-      if (!selectedCells.includes(cells[i])) {
-        return cells[i].dataset.id;
+  }
+}
+
+function checkForTwoElem(enemyFields, selectedCells) {
+  for (const key in enemyFields) {
+    if (enemyFields[key] == 2) {
+      const targetCells = document.querySelectorAll(`.${key}`);
+      console.log(targetCells);
+      for (let i = 0; i < targetCells.length; i++) {
+        if (!selectedCells.includes(targetCells[i])) {
+          return targetCells[i].dataset.id;
+        }
       }
-      
     }
   }
-} */
+}
+
+function deleteObjectProp(targetArray, sourceArray) {
+  for (const key in targetArray) {
+    if (sourceArray[key]) {
+      delete targetArray[key];
+    }
+  }
+}
 
 cells.forEach(item => {
   item.addEventListener('mousedown', () => gameControl(item))
@@ -351,3 +236,14 @@ img.addEventListener('mousedown', () => {
     gameControl(cells[choice]);
   }
 })
+
+let object = {name: 'Artem'};
+console.log(object.name)
+
+function deleteProp(object) {
+  delete object.name;
+  console.log(object.name)
+}
+
+deleteProp(object)
+console.log(object.name)
