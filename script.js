@@ -108,8 +108,13 @@ let gameControl = (() => {
 
         if(player.fields[className] == 3) {
           restart.classList.remove('off');
-          title.textContent = `${player.name} won!`
+          title.textContent = `${player.name} won!`;
+          return;
+        } else if(player.fields[className] != 3 && selectedCells.length == cells.length) {
+          restart.classList.remove('off');
+          title.textContent = `Draw!`;
         }
+        // сделать окно ничьи
       }
 
       player = (player.number == 1) ? player2 : player1;
@@ -122,18 +127,16 @@ let gameControl = (() => {
         gameControl(cells[choice]);
       }
     }
-    
-
+  
     return {player, selectedCells};
   }
 })()
 
 function robotChoice(player, selectedCells = []) {
  if (!selectedCells.length) {
-/*     let maxItem = 0;
+    let maxItem = 0;
     let minItem = cells.length - 1;
-    return Math.round(Math.random() * (maxItem - minItem + 1) + minItem - 0.5); */
-    return 4;
+    return Math.round(Math.random() * (maxItem - minItem + 1) + minItem - 0.5);
   } else {
     let enemyFields;
     if (player.number == 1) {
@@ -145,9 +148,10 @@ function robotChoice(player, selectedCells = []) {
 
 
     deleteObjectProp(robotChoice, enemyFields);
-    let checkForWin = checkForTwoElem(robotChoice.fields, selectedCells);
+    let checkForWin = checkForTwoElem(robotChoice, selectedCells);
+
     if (checkForWin) {
-      return checkForDefeat;
+      return checkForWin;
     }
 
     let checkForDefeat = checkForTwoElem(enemyFields, selectedCells);
@@ -183,13 +187,23 @@ function robotChoice(player, selectedCells = []) {
         id = index;
       }
     })
+
+    if (id == undefined) {
+      for (let i = 0; i < cells.length; i++) {
+        if (!selectedCells.includes(cells[i])) {
+          return i;
+        }
+      }
+    }
     return id;
+
+
   }
 }
 
-function checkForTwoElem(enemyFields, selectedCells) {
-  for (const key in enemyFields) {
-    if (enemyFields[key] == 2) {
+function checkForTwoElem(playerFields, selectedCells) {
+  for (const key in playerFields) {
+    if (playerFields[key] == 2) {
       const targetCells = document.querySelectorAll(`.${key}`);
       console.log(targetCells);
       for (let i = 0; i < targetCells.length; i++) {
