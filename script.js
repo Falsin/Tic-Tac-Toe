@@ -74,7 +74,7 @@ startButton.addEventListener('mousedown', () => {
     images[1].src = player2.src;
 
     if(player1.mode == 'AI') {
-      const choice = robotChoice(4)
+      const choice = robotChoice();
       gameControl(cells[choice]);
     }
   } else {
@@ -87,6 +87,48 @@ let gameBoard = (prop, player) => {
 }
 
 let gameControl = (() => {
+  let player = player1;
+  let selectedCells = [];
+
+  return function(item) {
+    if(item === undefined) {
+      selectedCells = [];
+      player = player1;
+    } else if(!selectedCells.includes(item)) {
+      gameBoard(item.style, player)
+      selectedCells.push(item);
+ 
+      for (let i = 0; i < item.classList.length; i++) {
+        let className = item.classList[i];
+
+        if(!player.fields[className]) {
+          player.fields[className] = 0;
+        }
+        player.fields[className]++;
+
+        if(player.fields[className] == 3) {
+          restart.classList.remove('off');
+          title.textContent = `${player.name} won!`
+        }
+      }
+
+      player = (player.number == 1) ? player2 : player1;
+      
+      if(player.mode == 'AI') {
+        let choice;
+        do {
+          choice = robotChoice(player, selectedCells);
+        } while (selectedCells.includes(cells[choice]))
+        gameControl(cells[choice]);
+      }
+    }
+    
+
+    return {player, selectedCells};
+  }
+})()
+
+/* let gameControl = (() => {
   let player = player1;
   let selectedCells = [];
 
@@ -126,16 +168,62 @@ let gameControl = (() => {
 
     return {player, selectedCells};
   }
-})()
+})() */
 
-function robotChoice(id, player, selectedCells = []) {
-  if(selectedCells.length == 0) {
+function robotChoice(player, selectedCells = []) {
+ if (!selectedCells.length) {
+/*     let maxItem = 0;
+    let minItem = cells.length - 1;
+    return Math.round(Math.random() * (maxItem - minItem + 1) + minItem - 0.5); */
+    return 4;
+  } else {
+    let enemyFields;
+    if (player.number == 1) {
+      enemyFields = JSON.parse(JSON.stringify(player2.fields));
+    } else {
+      enemyFields = JSON.parse(JSON.stringify(player1.fields));
+    }
+    let robotChoice = JSON.parse(JSON.stringify(player.fields));
+
+
+    let winChoice = 0;
+    let id = 0
+    for (let i = 0; i < cells.length; i++) {
+      let test = 0;
+      if (!selectedCells.includes(cells[i])) {
+        let classList = [...cells[i].classList];
+
+        for (let j = 0; j < classList.length; j++) {
+          if(!robotChoice[classList[j]]) {
+            robotChoice[classList[j]] = 0;
+          }
+          robotChoice[classList[j]]++;
+        }
+
+        for (const key in robotChoice) {
+          test++;
+        }
+      }
+
+      if (test > winChoice) {
+        winChoice = test;
+        id = i;
+      }
+
+      robotChoice = JSON.parse(JSON.stringify(player.fields));
+    }
+    return id;
+  }
+}
+
+/* function robotChoice(id, player, selectedCells = []) {
+  if(!selectedCells.length) {
     let maxItem = 0;
     let minItem = cells.length - 1;
     return Math.round(Math.random() * (maxItem - minItem + 1) + minItem - 0.5);
-} else if (!(selectedCells.length == cells.length - 1)) {
+  } else if (!(selectedCells.length == cells.length - 2)) {
     let enemyFields;
-    let robotFields = JSON.parse(JSON.stringify(player.fields));;
+    let robotFields = JSON.parse(JSON.stringify(player.fields));
     if(player.number == 2) {
       enemyFields = JSON.parse(JSON.stringify(player1.fields));
     } else {
@@ -234,8 +322,7 @@ function robotChoice(id, player, selectedCells = []) {
       
     }
   }
-
-}
+} */
 
 cells.forEach(item => {
   item.addEventListener('mousedown', () => gameControl(item))
