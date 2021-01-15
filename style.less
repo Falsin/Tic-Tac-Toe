@@ -17,7 +17,7 @@ body {
 
 #greetingBlock {
   .size(100%, 100%);
-  background: hsla(0, 100%, 50%, 0.541);
+  background: hsla(27, 45%, 54%, 0.829);
 }
 
 #box {
@@ -37,7 +37,7 @@ input {
   padding: 2% 5% 2% 5%;
 }
 
-#box header {
+header {
   letter-spacing: 4px;
 }
 
@@ -63,6 +63,9 @@ input {
 #choosePlayer .buttons button {
   padding: 1vmin 2vmin 1vmin 2vmin;
   margin-top: 2vmin;
+}
+
+button {
   border-radius: 8px;
   border: none;
   outline: none;
@@ -98,12 +101,15 @@ button:hover {
 }
 
 #container header {
-  background: red;
   grid-row-start: 1;
   grid-row-end: 2;
   grid-column-start: 1;
   grid-column-end: 4;
   .size(100%, 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsla(27, 45%, 54%, 0.829);
 }
 
 #container .player1 {
@@ -131,14 +137,14 @@ button:hover {
 }
 
 #gameBoard * {
-  background: white;
+  background: hsla(27, 45%, 54%, 0.829);
 }
 
 #gameBoard div {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 5em;
+  font-size: 4em;
 }
 
 #gameBoard *:hover {
@@ -155,12 +161,12 @@ button:hover {
 }
 
 footer {
-  background: orange;
   grid-row-start: 3;
   grid-row-end: 4;
   grid-column-start: 1;
   grid-column-end: 4;
   .size(100%, 100%);
+  background: hsla(27, 45%, 54%, 0.829);
 }
 
 #restart {
@@ -168,7 +174,7 @@ footer {
   top: 0;
   left: 0;
   .size(100%, 100%);
-  background: hsla(120, 100%, 25%, 0.473);
+  background: hsla(46, 47%, 39%, 0.575);
   z-index: 10;
   display: flex;
 }
@@ -222,7 +228,7 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: white; 
+  background: hsla(27, 45%, 54%, 0.829);
 }
 
 .namePlayer {

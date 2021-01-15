@@ -12,7 +12,7 @@ body {
 #greetingBlock {
   width: 100%;
   height: 100%;
-  background: hsla(0, 100%, 50%, 0.541);
+  background: hsla(27, 45%, 54%, 0.829);
 }
 #box {
   align-items: center;
@@ -30,7 +30,7 @@ input {
   outline: none;
   padding: 2% 5% 2% 5%;
 }
-#box header {
+header {
   letter-spacing: 4px;
 }
 #box #choosePlayer {
@@ -52,6 +52,8 @@ input {
 #choosePlayer .buttons button {
   padding: 1vmin 2vmin 1vmin 2vmin;
   margin-top: 2vmin;
+}
+button {
   border-radius: 8px;
   border: none;
   outline: none;
@@ -81,13 +83,16 @@ button:hover {
   grid-template-rows: auto 50vmin auto;
 }
 #container header {
-  background: red;
   grid-row-start: 1;
   grid-row-end: 2;
   grid-column-start: 1;
   grid-column-end: 4;
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsla(27, 45%, 54%, 0.829);
 }
 #container .player1 {
   color: blue;
@@ -114,13 +119,13 @@ button:hover {
   cursor: pointer;
 }
 #gameBoard * {
-  background: white;
+  background: hsla(27, 45%, 54%, 0.829);
 }
 #gameBoard div {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 5em;
+  font-size: 4em;
 }
 #gameBoard *:hover {
   background: hsla(0, 0%, 100%, 0.822);
@@ -135,13 +140,13 @@ button:hover {
   height: 100%;
 }
 footer {
-  background: orange;
   grid-row-start: 3;
   grid-row-end: 4;
   grid-column-start: 1;
   grid-column-end: 4;
   width: 100%;
   height: 100%;
+  background: hsla(27, 45%, 54%, 0.829);
 }
 #restart {
   position: absolute;
@@ -149,7 +154,7 @@ footer {
   left: 0;
   width: 100%;
   height: 100%;
-  background: hsla(120, 100%, 25%, 0.473);
+  background: hsla(46, 47%, 39%, 0.575);
   z-index: 10;
   display: flex;
 }
@@ -198,7 +203,7 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: white;
+  background: hsla(27, 45%, 54%, 0.829);
 }
 .namePlayer {
   margin-top: 4vmin;
