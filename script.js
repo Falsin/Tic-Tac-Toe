@@ -17,13 +17,13 @@ const img = restart.querySelector('img');
 const body = document.querySelector('body');
 const mainBlocks = [...body.children].slice(0, 3);
 
-const player = (name, color, number, fields) => {
-  return {name, color, number, fields}
+const player = (name, sign, number, fields) => {
+  return {name, sign, number, fields}
 }
 
-let player1 = player('player 1', 'blue', 1, {});
+let player1 = player('player 1', '×', 1, {});
 
-let player2 = player('player 2', 'red', 2, {});
+let player2 = player('player 2', '○', 2, {});
 
 buttons.forEach(item => {
   item.addEventListener('mousedown', () => {
@@ -83,7 +83,9 @@ startButton.addEventListener('mousedown', () => {
 })
 
 let gameBoard = (prop, player) => {
-  prop.background = player.color;
+  console.log(prop);
+  console.log(player.sign);
+  prop.textContent = player.sign;
 }
 
 let gameControl = (() => {
@@ -95,7 +97,7 @@ let gameControl = (() => {
       selectedCells = [];
       player = player1;
     } else if(!selectedCells.includes(item)) {
-      gameBoard(item.style, player)
+      gameBoard(item, player)
       selectedCells.push(item);
  
       for (let i = 0; i < item.classList.length; i++) {
@@ -110,11 +112,10 @@ let gameControl = (() => {
           restart.classList.remove('off');
           title.textContent = `${player.name} won!`;
           return;
-        } else if(player.fields[className] != 3 && selectedCells.length == cells.length) {
+        } else if(selectedCells.length == cells.length) {
           restart.classList.remove('off');
           title.textContent = `Draw!`;
         }
-        // сделать окно ничьи
       }
 
       player = (player.number == 1) ? player2 : player1;
@@ -144,11 +145,11 @@ function robotChoice(player, selectedCells = []) {
     } else {
       enemyFields = JSON.parse(JSON.stringify(player1.fields));
     }
-    let robotChoice = JSON.parse(JSON.stringify(player.fields));
+    let robotFields = JSON.parse(JSON.stringify(player.fields));
 
 
-    deleteObjectProp(robotChoice, enemyFields);
-    let checkForWin = checkForTwoElem(robotChoice, selectedCells);
+    deleteObjectProp(robotFields, enemyFields);
+    let checkForWin = checkForTwoElem(robotFields, selectedCells);
 
     if (checkForWin) {
       return checkForWin;
@@ -159,45 +160,16 @@ function robotChoice(player, selectedCells = []) {
       return checkForDefeat;
     }
 
-    let winChoice = 0;
-    let id;
-    cells.forEach((item, index) => {
-      robotChoice = JSON.parse(JSON.stringify(player.fields));
-      deleteObjectProp(robotChoice, enemyFields);
+    let firstMoves = moves(player, enemyFields, selectedCells);
 
-      let validValue = 0;
-      if (!selectedCells.includes(item)) {
-        let classList = [...item.classList];
-        for (let i = 0; i < classList.length; i++) {
-          if (!enemyFields[classList[i]]) {
-            for (let j = 0; j < classList.length; j++) {
-              if(!robotChoice[classList[j]]) {
-                robotChoice[classList[j]] = 0;
-              }
-              robotChoice[classList[j]]++;
-            }
-            for (const key in robotChoice) {
-              validValue++;
-            }
-          }
-        }
-      }
-      if (validValue > winChoice) {
-        winChoice = validValue;
-        id = index;
-      }
-    })
-
-    if (id == undefined) {
+    if (firstMoves == undefined) {
       for (let i = 0; i < cells.length; i++) {
         if (!selectedCells.includes(cells[i])) {
           return i;
         }
       }
     }
-    return id;
-
-
+    return firstMoves;
   }
 }
 
@@ -223,6 +195,34 @@ function deleteObjectProp(targetArray, sourceArray) {
   }
 }
 
+function moves(player, enemyFields, selectedCells) {
+  let winChoice = 0;
+  let id;
+  cells.forEach((item, index) => {
+    robotFields = JSON.parse(JSON.stringify(player.fields));
+    deleteObjectProp(robotFields, enemyFields);
+
+    let validValue = 0;
+    if (!selectedCells.includes(item)) {
+      let classList = [...item.classList];
+      for (let i = 0; i < classList.length; i++) {
+        if (!enemyFields[classList[i]]) {
+          for (let j = 0; j < classList.length; j++) {
+            if(!robotFields[classList[j]]) {
+              robotFields[classList[j]] = 0;
+            }
+            robotFields[classList[j]]++;
+          }
+          for (const key in robotFields) {
+            validValue++;
+          }
+        }
+      }
+    }
+    return (validValue > winChoice) ? index : id;
+  })
+}
+
 cells.forEach(item => {
   item.addEventListener('mousedown', () => gameControl(item))
 })
@@ -234,7 +234,7 @@ img.addEventListener('mousedown', () => {
   container.classList.remove('off');
 
   cells.forEach(item => {
-    item.style.background = 'white';
+    item.textContent = '';
   })
 
   player1.fields = {};
