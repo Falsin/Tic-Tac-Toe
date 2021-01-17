@@ -30,8 +30,8 @@ buttons.forEach(item => {
     const player = item.parentNode.parentNode.classList[0];
     const mode = item.textContent;
     const input = item.parentNode.parentNode.querySelector('input');
-    const srcImg = (mode == 'Human') ? '/images/personIcon.png':
-                                       '/images/robot.jpeg';
+    const srcImg = (mode == 'Human') ? 'images/personIcon.png':
+                                       'images/robot.jpeg';
 
     if(player == 'player1') {
       player1.mode = mode;
